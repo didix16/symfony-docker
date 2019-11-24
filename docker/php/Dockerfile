@@ -12,9 +12,12 @@ RUN apt-get update && apt-get install -y \
         libfreetype6-dev \
         libjpeg62-turbo-dev \
         libpng-dev \
+        git nano \
     && docker-php-ext-install -j$(nproc) iconv \
     && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
-    && docker-php-ext-install -j$(nproc) gd
+    && docker-php-ext-install -j$(nproc) gd \
+    && docker-php-ext-install -j$(nproc)zip \
+    && docker-php-ext-install -j$(nproc)unzip
 
 ENV LC_ALL=${LANG}
 ENV LANGUAGE=${LANG}
@@ -30,6 +33,8 @@ WORKDIR /var/www/app
 #RUN mkdir /run/php
 #RUN chown www-data:www-data /run/php
 RUN chmod 777 /var/log
+RUN chown www-data:www-data /var/www
 RUN chown -R www-data:www-data /var/www/app
+RUN echo 'memory_limit = 512M' >> /usr/local/etc/php/conf.d/docker-php-memlimit.ini;
 
 EXPOSE 9000
